@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+
+
+<SplitPane dividerPositions="0.3" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="WeatherApp.Controller.WeatherController">
+    <items>
+        <VBox spacing="10">
+            <ListView fx:id="sensorListView"/>
+            <Button text="Add Sensor" onAction="#onCreateSensor" maxWidth="Infinity"/>
+            <Button text="Add Virtual Sensor" onAction="#onCreateVirtualSensor" maxWidth="Infinity"/>
+            <Button text="Delete Sensor" onAction="#onDeleteSensor" />
+        </VBox>
+
+        <VBox fx:id="detailsPane" alignment="CENTER" spacing="20">
+            <Label text="Select a sensor to see details" />
+        </VBox>
+    </items>
+</SplitPane>
