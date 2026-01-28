@@ -1,28 +1,39 @@
 package Models;
 
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.TreeMap;
 
 public class VirtualSensor extends Sensor {
     private Map<Sensor, Double> subSensors = new HashMap<>();
+
+    private Map<Sensor, Observer> subSensorObservers = new HashMap<>();
 
     public VirtualSensor(String name) {
         super(name);
     }
 
     public void addSensor(Sensor s, double weight) {
-        if (s == this) return;
-
         subSensors.put(s, weight);
-        s.attach(newTemp -> calculateWeightedAverage());
-
+        Observer obs = newTemp -> calculateWeightedAverage();
+        s.attach(obs);
         calculateWeightedAverage();
     }
 
     public Map<Sensor, Double> getSubSensors() {
         return subSensors;
+    }
+
+    public void removeSensor(Sensor s) {
+        if (subSensors.containsKey(s)) {
+            subSensors.remove(s);
+
+            Observer obs = subSensorObservers.remove(s);
+            if (obs != null) {
+                s.detach(obs);
+            }
+            calculateWeightedAverage();
+        }
     }
 
     private void calculateWeightedAverage() {

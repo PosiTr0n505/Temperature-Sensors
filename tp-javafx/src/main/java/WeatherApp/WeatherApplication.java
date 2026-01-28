@@ -17,7 +17,7 @@ public class WeatherApplication extends Application {
 
         controller = fxmlLoader.getController();
 
-        stage.setTitle("Welcome tiny humans!");
+        stage.setTitle("WELCOME TINY HUMANS!");
         stage.setScene(scene);
         stage.show();
     }

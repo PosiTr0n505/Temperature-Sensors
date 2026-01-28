@@ -10,11 +10,11 @@
 <SplitPane dividerPositions="0.3" xmlns:fx="http://javafx.com/fxml"
            fx:controller="WeatherApp.Controller.WeatherController">
     <items>
-        <VBox spacing="10">
+        <VBox spacing="10" alignment="CENTER">
             <ListView fx:id="sensorListView"/>
             <Button text="Add Sensor" onAction="#onCreateSensor" maxWidth="Infinity"/>
             <Button text="Add Virtual Sensor" onAction="#onCreateVirtualSensor" maxWidth="Infinity"/>
-            <Button text="Delete Sensor" onAction="#onDeleteSensor" />
+            <Button text="Delete Sensor" onAction="#onDeleteSensor" maxWidth="Infinity"/>
         </VBox>
 
         <VBox fx:id="detailsPane" alignment="CENTER" spacing="20">

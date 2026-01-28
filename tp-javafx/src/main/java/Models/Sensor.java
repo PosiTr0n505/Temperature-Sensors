@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 
+import java.util.Comparator;
 import java.util.UUID;
 
 public class Sensor extends Observable implements Runnable {

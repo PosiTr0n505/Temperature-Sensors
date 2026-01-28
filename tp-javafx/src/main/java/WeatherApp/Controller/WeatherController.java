@@ -1,6 +1,5 @@
 package WeatherApp.Controller;
 
-import Generators.RealisticGenerator;
 import Generators.TemperatureGenerator;
 import Models.Sensor;
 import Models.VirtualSensor;
@@ -45,12 +44,15 @@ public class WeatherController {
         contributors.setPrefHeight(150);
         updateContributorList(vs, contributors);
 
-        Button addSourceBtn = new Button("Add Source Sensor");
-        addSourceBtn.setOnAction(e -> {
-            addSourceToVirtual(vs, contributors);
+        Button addBtn = new Button("Add Sensor");
+        addBtn.setOnAction(e -> {
+            addSensorToVirtual(vs, contributors);
         });
 
-        detailsPane.getChildren().addAll(nameLabel, typeLabel, tempLabel, new Label("Contributors:"), contributors, addSourceBtn);
+        Button deleteBtn = new Button("Delete Sensor");
+        deleteBtn.setOnAction(e -> deleteSensorFromVirtual(vs, contributors));
+
+        detailsPane.getChildren().addAll(nameLabel, typeLabel, tempLabel, new Label("Contributors:"), contributors, addBtn, deleteBtn);
     }
 
     private void updateContributorList(VirtualSensor vs, ListView<String> view) {
@@ -136,9 +138,9 @@ public class WeatherController {
         });
     }
 
-    private void addSourceToVirtual(VirtualSensor vs, ListView<String> viewToUpdate) {
+    private void addSensorToVirtual(VirtualSensor vs, ListView<String> viewToUpdate) {
         Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setTitle("Add Source");
+        dialog.setTitle("Add Sensor");
         dialog.setHeaderText("Pick a sensor and a weight");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -150,8 +152,8 @@ public class WeatherController {
         dialog.setResultConverter(btn -> {
             if (btn == ButtonType.OK && sensorBox.getValue() != null) {
                 try {
-                    double w = Double.parseDouble(weightField.getText());
-                    vs.addSensor(sensorBox.getValue(), w);
+                    double weight = Double.parseDouble(weightField.getText());
+                    vs.addSensor(sensorBox.getValue(), weight);
                     return true;
                 } catch (NumberFormatException e) {
                     return false;
@@ -165,6 +167,24 @@ public class WeatherController {
         });
     }
 
+    public void deleteSensorFromVirtual(VirtualSensor vs, ListView<String> viewToUpdate){
+        ObservableList<Sensor> currentSensors = FXCollections.observableArrayList(vs.getSubSensors().keySet());
+
+        if (currentSensors.isEmpty()) {
+            showError("No sensors to delete!");
+            return;
+        }
+        ChoiceDialog<Sensor> dialog = new ChoiceDialog<>(currentSensors.get(0), currentSensors);
+        dialog.setTitle("Remove Sensor");
+        dialog.setHeaderText("Select a sensor to remove from " + vs.getName());
+        dialog.setContentText("Sensor:");
+
+        dialog.showAndWait().ifPresent(sensorToRemove -> {
+            vs.removeSensor(sensorToRemove);
+            updateContributorList(vs, viewToUpdate);
+        });
+    }
+
     @FXML
     public void onDeleteSensor() {
         Sensor selected = sensorListView.getSelectionModel().getSelectedItem();
@@ -173,7 +193,6 @@ public class WeatherController {
             return;
         }
 
-        // Confirm deletion
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Delete Sensor");
         confirm.setHeaderText("Delete " + selected.getName() + "?");

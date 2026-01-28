@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Observable {
-    private Set<Observer> observers = new HashSet<Observer>();
+    protected Set<Observer> observers = new HashSet<Observer>();
 
     public void attach(Observer o) {
         observers.add(o);
